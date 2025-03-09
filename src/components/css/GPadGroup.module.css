@@ -1,0 +1,44 @@
+.gpadContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    border-radius: 8px;
+    overflow: hidden;
+    gap: 10px;
+}
+
+
+.gpadContainer button {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+    text-align: center;
+
+    background: #555;
+    color: #fff;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+}
+
+.gpadContainer button:active {
+    background-color: #777;
+    transform: scale(0.98);
+}
+
+/* .exitButton {
+    width: 120px;
+    grid-column: 2 / 4;
+    grid-row: -1 / -2;
+} */
+
+.display {
+    background: #222;
+    border: 1px solid #666;
+    font-family: monospace;
+    font-size: 1rem;
+    padding: 8px;
+    margin: 8px;
+    height: 20px;
+    border-radius: 4px;
+    overflow: hidden;
+}
