@@ -36,7 +36,7 @@ async function getCncjsToken(baseUrl) {
 }
 
 // ✅ Open CNCjs WebSocket connection
-export async function openCncjsConnection(options, onMessageHandler) {
+export async function openSocket(options, onMessageHandler) {
     gopt = options;
     if (socket) {
         console.warn("⚠️ CNCjs connection already exists. Closing old connection...");
@@ -53,24 +53,9 @@ export async function openCncjsConnection(options, onMessageHandler) {
     // ✅ Establish connection (no `.onAny()` in Socket.IO 2.5.0)
     socket = io(`ws://${options.cncjsAddress}:${options.cncjsPort}`, {
         path: "/socket.io",
-        query: { token }
+        query: { token },
     });
 
-    socket.on("connect", () => {
-        console.log("✅ Connected to CNCjs:", socket.id);
-        if (options.port) {
-            console.log(`🔌 Opening port: ${options.port} at ${options.baudrate} baud`);
-            socket.emit("open", options.port, {
-                baudrate: Number(options.baudrate),
-                controllerType: options.controllerType
-            });
-        }
-    });
-
-    socket.on("disconnect", (reason) => {
-        console.warn("⚠️ Disconnected from CNCjs:", reason);
-        socket = null;
-    });
 
     // ✅ Manually handle each CNCjs event (since `.onAny()` is unavailable)
     const events = [
@@ -94,19 +79,20 @@ export async function openCncjsConnection(options, onMessageHandler) {
         "controller:settings",
         "controller:state",
         "message",
-        "Grbl:state"
+        "Grbl:state",
+        "connect",
+        "disconnect",
     ];
 
     events.forEach((event) => {
         socket.on(event, (data) => {
-            // console.log(`📡 CNCjs Event: ${event}`, data);
             if (onMessageHandler) onMessageHandler({ event, data });
         });
     });
 }
 
 // ✅ Close CNCjs connection
-export function closeCncjsConnection() {
+export function closeSocket() {
     if (socket) {
         console.log("❌ Closing CNCjs connection...");
         socket.disconnect();
@@ -116,6 +102,17 @@ export function closeCncjsConnection() {
     }
 }
 
+
+export function openSerial(options){
+    socket.emit("open", options.port, {
+        baudrate: Number(options.baudrate),
+        controllerType: options.controllerType
+    });
+}
+
+export function closeSerial(){
+    socket.emit("close", gopt.port);
+}
 
 // ✅ Send G-code
 export function sendGcode(gcode) {
@@ -145,4 +142,8 @@ export function sendRawSerial(data) {
     }
     console.log(`➡️ Sending Raw Serial Data: ${data}`);
     socket.emit("writeln",gopt.port, data);
+}
+
+export function checkPorts(){
+    socket.emit("list");
 }

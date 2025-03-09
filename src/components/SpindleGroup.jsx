@@ -46,17 +46,17 @@ export default function SpindleGroup() {
             case 'm3':
                 // e.g., "M3 S{value}"
                 console.log(`Send command: M3 S${value}`);
-                sendGcode(`M3 S${value}`);
+                sendRawSerial(`M3 S${value}`);
                 break;
             case 'm4':
                 // e.g., "M4 S{value}"
                 console.log(`Send command: M4 S${value}`);
-                sendGcode(`M4 S${value}`);
+                sendRawSerial(`M4 S${value}`);
                 break;
             case 'm6':
                 // e.g., "M6 T{value}"
                 console.log(`Send command: M6 T${value}`);
-                sendGcode(`M6 T${value}`);
+                sendRawSerial(`M6 T${value}`);
                 break;
             default:
                 console.log('Unknown command');

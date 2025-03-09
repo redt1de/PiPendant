@@ -15,17 +15,32 @@
     left: 0;
     width: 1024px;
     height: 60px;
-    /* fixed height for tab bar */
     background: #333;
     display: flex;
     align-items: center;
     justify-content: space-around;
+    /**/
+    gap: 10px;
+
 }
+
+/* .tabBar a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.5rem;
+} */
 
 .tabBar a {
     color: #fff;
     text-decoration: none;
     font-size: 1.5rem;
+    padding: 10px 20px;
+    /* Increased padding for button effect */
+    background: #444;
+    /* Button-like background */
+    border-radius: 6px;
+    /* Rounded corners */
+    transition: background 0.2s ease-in-out;
 }
 
 .viewContainer {

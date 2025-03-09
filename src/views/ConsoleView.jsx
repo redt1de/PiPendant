@@ -5,6 +5,14 @@ import GPadGroup from '../components/GPadGroup';
 import { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { CncjsContext } from '../cncjs/CncjsProvider';
+import Frame from '../util/Frame';
+import MDI from '../components/MDI';
+import SpindleGroup from '../components/SpindleGroup';
+import styles from './css/ConsoleView.module.css';
+import MachineGroup from '../components/MachineGroup';
+import CycleGroup from '../components/CycleGroup';
+import StateGroup from '../components/StateGroup';
+
 
 export default function ConsoleView() {
     const { sendGcode, sendCncjsCommand, sendRawSerial } = useContext(CncjsContext);
@@ -23,8 +31,15 @@ export default function ConsoleView() {
 
 
     return (
-        <div style={{ padding: '10px' }}>
-            <div style={{ position: 'absolute', bottom: '0px', left: '0px' }}>
+        <div className={styles.consoleView}>
+
+            <div style={{ position: 'absolute', top: '0px', left: '10px' }}>
+                <Frame title="Machine" >
+                    <StateGroup />
+                </Frame>
+            </div>
+
+            <div style={{ position: 'absolute', bottom: '0px', left: '10px' }}>
                 <GPadGroup messages={machineMessages} onEnter={(input) => {
                     console.log('🚀 Sending Gcode:', input);
                     sendRawSerial(input);
@@ -32,8 +47,26 @@ export default function ConsoleView() {
                     // sendGcode(input);
                 }} />
             </div>
-            <div style={{ position: 'absolute', bottom: '50px', left: '350px' }}>
-                <ConsoleGroup messages={machineMessages} />
+
+
+            <div style={{ position: 'absolute', top: '0px', left: '460px' }}>
+                <Frame title="DRO">
+                    <MDI />
+                </Frame>
+            </div>
+
+
+            <div style={{ position: 'absolute', top: '0px', right: '10px' }}>
+                <Frame title="Tool">
+                    <SpindleGroup />
+                </Frame>
+            </div>
+
+
+            <div style={{ position: 'absolute', bottom: '0px', right: '10px' }}>
+                <Frame title="Console">
+                    <ConsoleGroup messages={machineMessages} />
+                </Frame>
             </div>
         </div>
     );

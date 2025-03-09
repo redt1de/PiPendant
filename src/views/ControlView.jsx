@@ -28,11 +28,6 @@ export default function ControlView() {
         return () => clearInterval(interval);
     }, []);
 
-    // Stubbed send function – in future, this will send via WebSocket
-    const sendCommandStub = (cmd) => {
-        console.log("Sending command:", cmd);
-        // In the future, integrate with CNCjs WebSocket API here
-    };
 
     return (
         <div className={styles.controlView}>
@@ -52,7 +47,7 @@ export default function ControlView() {
 
             <div style={{ position: 'absolute', top: '0px', left: '460px' }}>
                 <Frame title="DRO">
-                    <MDI onSend={sendCommandStub} />
+                    <MDI />
                 </Frame>
             </div>
 

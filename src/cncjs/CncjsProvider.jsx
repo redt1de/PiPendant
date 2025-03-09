@@ -1,59 +1,112 @@
 import React, { createContext, useEffect, useState } from "react";
 import {
-    openCncjsConnection,
-    closeCncjsConnection,
+    openSocket,
+    closeSocket,
+    openSerial,
     sendGcode,
     sendCncjsCommand,
-    sendRawSerial
+    sendRawSerial,
+    checkPorts
 } from "./cncjsConnection";
 
 export const CncjsContext = createContext(null);
 
-
-
-
 export function CncjsProvider({ options, children }) {
-    const [connected, setConnected] = useState(false);
-    // const [status, setStatus] = useState(null);
-    // const [workflow, setWorkflow] = useState(null);
-    // const [feeder, setFeeder] = useState(null);
-    // const [controller, setController] = useState(null);
+    const [isSocketConnected, setIsSocketConnected] = useState(false);
+    const [isControllerConnected, setIsControllerConnected] = useState(false);
     const [grblState, setGrblState] = useState(null);
     const [consoleMessages, setConsoleMessages] = useState([]); // Store console output
 
 
     useEffect(() => {
         function handleCncjsEvent(eventData) {
-            // if (eventData.event === "status") setStatus(eventData.data);
-            // if (eventData.event === "workflow:state") setWorkflow(eventData.data);
-            // if (eventData.event === "feeder:status") setFeeder(eventData.data);
-            // if (eventData.event === "controller:state") setController(eventData.data);
-
-            if (eventData.event === "Grbl:state") setGrblState(eventData.data);
-
-            if (eventData.event === "serialport:error") console.log(eventData.data);
-
-            if (eventData.event === "serialport:read" || eventData.event === "serialport:write") {
-                const ln = eventData.data.toString().trim();
-                if (ln) {
-                    setConsoleMessages((prev) => {
-                        const updatedMessages = [...prev, ln];
-                        return updatedMessages;
-                    });
-                }
+            switch (eventData.event) {
+                case "Grbl:state":
+                    // console.log("🔵 Grbl State:", eventData.data);
+                    setGrblState(eventData.data);
+                    break;
+                case "serialport:error":
+                    console.error(eventData.data);
+                    break;
+                case "serialport:read" || "serialport:write":
+                    const rln = eventData.data.toString().trim();
+                    if (rln) {
+                        setConsoleMessages((prev) => {
+                            const updatedMessages = [...prev, rln];
+                            return updatedMessages;
+                        });
+                    }
+                    break;
+                case "serialport:write":
+                    const wln = eventData.data.toString().trim();
+                    if (wln) {
+                        setConsoleMessages((prev) => {
+                            const updatedMessages = [...prev, '► ' + wln];
+                            return updatedMessages;
+                        });
+                    }
+                    break;
+                case "serialport:list":
+                    for (let port of eventData.data) {
+                        // console.log("🔌 Serial Port:", port.inuse);
+                        if (port.inuse && !isControllerConnected) {
+                            openSerial(options);
+                            setIsControllerConnected(true);
+                            break;
+                        }
+                    }
+                    setIsControllerConnected(false);
+                    break;
+                case "connect": // socket.io connected
+                    setIsSocketConnected(true);
+                    console.log("🔗✅ Socket.IO Connected");
+                    checkPorts();
+                    break;
+                case "disconnect":
+                    setIsSocketConnected(false);
+                    setIsControllerConnected(false);
+                    console.log("🔗❌ Socket.IO Disconnected");
+                    break;
+                case "serialport:open": // Serial port opened
+                    setIsControllerConnected(true);
+                    console.log("🔌✅ Serial port opened");
+                    break;
+                case "serialport:close":
+                    setIsControllerConnected(false);
+                    console.log("🔌❌ Serial port closed");
+                    break;
+                // {event: "serialport:change", data:{port: '/dev/ttyUSB0', inuse: false}}
+                case "serialport:change":
+                    setIsControllerConnected(eventData.data.inuse);
+                    if (eventData.data.inuse && !isControllerConnected) {
+                        // Serial port is in use but not connected
+                        openSerial(options);
+                    }
+                    console.log("🔌⚠️ Serial port changed:", eventData.data);
+                    break;
+                default:
+                    console.log("Unknown event:", eventData);
+                    break;
             }
         }
 
 
+        openSocket(options, handleCncjsEvent)
+            .then(() => setIsSocketConnected(true))
+            .catch(() => setIsSocketConnected(false));
 
-
-        openCncjsConnection(options, handleCncjsEvent)
-            .then(() => setConnected(true))
-            .catch(() => setConnected(false));
+        // ✅ Send heartbeat every 5 seconds to ensure CNCjs is still responsive
+        const heartbeatInterval = setInterval(() => {
+            if (isSocketConnected) {
+                // sendCncjsCommand("gcode", "?"); // Sends a status request
+            }
+        }, 5000);
 
         return () => {
-            closeCncjsConnection();
-            setConnected(false);
+            clearInterval(heartbeatInterval);
+            closeSocket();
+            setIsSocketConnected(false);
+            setIsControllerConnected(false);
         };
     }, [options]);
 
@@ -63,83 +116,17 @@ export function CncjsProvider({ options, children }) {
 
     return (
         <CncjsContext.Provider value={{
-            connected,
-            // status,
-            // workflow,
-            // feeder,
+            isSocketConnected,
+            isControllerConnected,
             grblState,
             consoleMessages,
             sendGcode,
             sendCncjsCommand,
             sendRawSerial
+
         }}>
             {children}
         </CncjsContext.Provider>
     );
 }
 
-
-
-// // CncjsProvider.jsx
-// import React, { createContext, useEffect, useState } from 'react';
-// import { openCncjsConnection, closeCncjsConnection } from './cncjsConnection';
-
-// export const CncjsContext = createContext(null);
-
-
-// const options = {
-//     cncjsAddress: '127.0.0.1',
-//     cncjsPort: 8000,
-//     baudrate: 115200,
-//     controllerType: 'Grbl',
-//     port: '/dev/ttyUSB0',
-// }
-
-// export function CncjsProvider({ baseUrl = 'http://127.0.0.1:8000', children }) {
-//     const [connected, setConnected] = useState(false);
-
-//     useEffect(() => {
-//         let unmounted = false;
-
-//         async function init() {
-//             try {
-//                 if (unmounted) return;
-//                 openCncjsConnection(options, handleCncjsEvent)
-//                 setConnected(true);
-//             } catch (error) {
-//                 console.error('Failed to initialize CNCjs connection:', error);
-//                 setConnected(false);
-//             }
-//         }
-
-//         init();
-
-//         return () => {
-//             unmounted = true;
-//             closeCncjsConnection();
-//         };
-//     }, [baseUrl]);
-
-
-//     // Example event handler for CNCjs messages
-//     function handleCncjsEvent(evt) {
-//         console.log('CNCjs event:', evt);
-
-
-//         if (evt.event === 'disconnect') {
-//             setConnected(false);
-//         }
-//     }
-
-//     // Expose the context value to children
-//     const value = {
-//         connected,
-//         // Example actions if needed
-//     };
-
-//     return (
-//         <CncjsContext.Provider value={value}>
-//             {children}
-//         </CncjsContext.Provider>
-//     );
-// }

@@ -4,14 +4,7 @@ import { CncjsContext } from "../cncjs/CncjsProvider";
 export default function MDI({ positions = {} }) {
     const { grblState } = useContext(CncjsContext);
     return (
-        // <Frame title="DRO">
         <div className={styles.mdiContainer}>
-            {/* <label className={styles.stateLabel} htmlFor="state">
-                    State:
-                </label>
-                <label className={styles.state} id="state">
-                    RUNNING
-                </label> */}
 
             <table className={styles.mdiTable}>
                 <thead>
@@ -41,7 +34,5 @@ export default function MDI({ positions = {} }) {
             </table>
         </div>
 
-
-        // </Frame>
     );
 }

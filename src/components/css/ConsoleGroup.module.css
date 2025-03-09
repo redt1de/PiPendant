@@ -32,6 +32,10 @@
 
 /* Default text (green) */
 .default {
+    color: #aaa;
+}
+
+.success {
     color: #0f0;
 }
 
@@ -43,6 +47,10 @@
 /* Errors (red) */
 .error {
     color: #f00;
+}
+
+.sent {
+    color: rgb(92, 91, 91);
 }
 
 /* Each line in console */
