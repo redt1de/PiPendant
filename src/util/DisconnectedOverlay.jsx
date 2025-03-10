@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import styles from "./css/DisconnectedOverlay.module.css";
-import { CncjsContext } from "../cncjs/CncjsProvider";
+import { CncjsContext } from "../providers/cncjs/CncjsProvider";
 
 export default function DisconnectedOverlay() {
     const { isSocketConnected, isControllerConnected } = useContext(CncjsContext);

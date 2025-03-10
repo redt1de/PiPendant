@@ -1,11 +1,11 @@
 import styles from './css/CycleGroup.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse, faLockOpen, faRotateBack, faStop, faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
+import { faStop, faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
 import { useContext } from 'react';
-import { CncjsContext } from '../cncjs/CncjsProvider';
+import { CncjsContext } from '../providers/cncjs/CncjsProvider';
 
 export default function CycleGroup() {
-    const { sendGcode, sendCncjsCommand, sendRawSerial } = useContext(CncjsContext);
+    const { sendCncjsCommand } = useContext(CncjsContext);
     return (
 
         <div className={styles.cycleContainer}>

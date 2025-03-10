@@ -1,11 +1,9 @@
 // App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, Link, Outlet } from 'react-router-dom';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faGamepad, faTerminal, faListAlt, faFolderOpen, faDraftingCompass } from '@fortawesome/free-solid-svg-icons';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import styles from './App.module.css';
-import { CncjsProvider } from './cncjs/CncjsProvider';
-// Import the view components
+import { CncjsProvider } from './providers/cncjs/CncjsProvider';
+import { FluidNCProvider } from './providers/fluidnc/FluidNCProvider';
 import ControlView from './views/ControlView';
 import ConsoleView from './views/ConsoleView';
 import MacrosView from './views/MacrosView';
@@ -14,21 +12,36 @@ import AutolevelView from './views/AutolevelView';
 import DisconnectedOverlay from './util/DisconnectedOverlay';
 import { NavLink } from "react-router-dom"; // ✅ Use NavLink for active styling
 import WebcamView from './views/WebcamView';
+import loadConfig from "./util/Config";
+import { useState, useEffect } from 'react';
 
 
 function App() {
-  const options = {
-    cncjsAddress: '127.0.0.1',
-    cncjsPort: 8000,
-    baudrate: 115200,
-    controllerType: 'Grbl',
-    port: '/dev/ttyUSB0',
+  const [config, setConfig] = useState(null);
+
+  useEffect(() => {
+    loadConfig().then(setConfig);
+  }, []);
+
+  if (!config) return <div>Loading...</div>;
+  // ✅ Dynamically select the provider
+  let Provider;
+  switch (config.socketProvider) {
+    case "fluidnc":
+      Provider = FluidNCProvider;
+      break;
+    case "cncjs":
+    default:
+      Provider = CncjsProvider;
+      break;
   }
+
 
 
   return (
 
-    <CncjsProvider options={options}>
+    <Provider options={config}>
+
       <div className={styles.appContainer}>
         <Router>
           <nav className={styles.tabBar}>
@@ -66,7 +79,7 @@ function App() {
         </Router>
       </div>
       <DisconnectedOverlay /> {/* ✅ Overlay blocks UI when disconnected */}
-    </CncjsProvider>
+    </Provider>
   );
 }
 

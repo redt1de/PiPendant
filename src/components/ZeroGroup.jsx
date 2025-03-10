@@ -1,9 +1,9 @@
 import styles from './css/ZeroGroup.module.css';
 import { useContext } from 'react';
-import { CncjsContext } from '../cncjs/CncjsProvider';
+import { CncjsContext } from '../providers/cncjs/CncjsProvider';
 
 export default function ZeroGroup() {
-    const { sendGcode, sendCncjsCommand, sendRawSerial } = useContext(CncjsContext);
+    const { sendGcode } = useContext(CncjsContext);
     return (
         // <Frame title="Zero">
         <div className={styles.zeroContainer}>

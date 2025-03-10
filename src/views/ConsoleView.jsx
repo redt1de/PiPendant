@@ -4,7 +4,7 @@ import ConsoleGroup from '../components/ConsoleGroup';
 import GPadGroup from '../components/GPadGroup';
 import { useEffect, useState } from 'react';
 import { useContext } from 'react';
-import { CncjsContext } from '../cncjs/CncjsProvider';
+import { CncjsContext } from '../providers/cncjs/CncjsProvider';
 import Frame from '../util/Frame';
 import MDI from '../components/MDI';
 import SpindleGroup from '../components/SpindleGroup';

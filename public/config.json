@@ -1,0 +1,8 @@
+{
+    "socketProvider": "cncjs",
+    "socketAddress": "127.0.0.1",
+    "socketPort": 8000,
+    "baudrate": 115200,
+    "controllerType": "Grbl",
+    "serialPort": "/dev/ttyUSB0"
+}

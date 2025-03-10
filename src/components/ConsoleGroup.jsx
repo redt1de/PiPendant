@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useContext } from "react";
-import { CncjsContext } from "../cncjs/CncjsProvider";
+import { CncjsContext } from "../providers/cncjs/CncjsProvider";
 import styles from "./css/ConsoleGroup.module.css";
 
 
@@ -12,9 +12,9 @@ const syntaxMatchers = {
     "\\[DBG:.*\\]": styles.debug // Debug messages
 };
 
-const msgFilters = [
-    "$G"
-];
+// const msgFilters = [
+//     "$G"
+// ];
 
 
 export default function ConsoleGroup() {
@@ -31,14 +31,14 @@ export default function ConsoleGroup() {
 
     // ✅ Function to apply syntax highlighting
 
-    const checkFilter = (msg) => {
-        for (const [pattern, style] of Object.entries(msgFilters)) {
-            if (new RegExp(pattern, "i").test(msg)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // const checkFilter = (msg) => {
+    //     for (const [pattern, style] of Object.entries(msgFilters)) {
+    //         if (new RegExp(pattern, "i").test(msg)) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
     const getHighlightedMessage = (msg) => {
         for (const [pattern, style] of Object.entries(syntaxMatchers)) {

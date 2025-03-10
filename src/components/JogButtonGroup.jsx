@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import styles from './css/JogButtonGroup.module.css';
 import { useContext } from 'react';
-import { CncjsContext } from '../cncjs/CncjsProvider';
+import { CncjsContext } from '../providers/cncjs/CncjsProvider';
 import YesNoDialog from "../util/YesNoDialog";
 
 export default function JogButtonGroup() {
     const [stepSize, setStepSize] = useState('10.0');
-    const { sendGcode, sendCncjsCommand, sendRawSerial } = useContext(CncjsContext);
+    const { sendGcode } = useContext(CncjsContext);
 
     const [showDialog, setShowDialog] = useState(false);
 

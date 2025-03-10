@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./css/StateGroup.module.css";
-import { CncjsContext } from "../cncjs/CncjsProvider";
+import { CncjsContext } from "../providers/cncjs/CncjsProvider";
 
 export default function StateGroup() {
     const { grblState, consoleMessages = [] } = useContext(CncjsContext);

@@ -12,7 +12,7 @@
 42["controller:state","Grbl",{"status":{"activeState":"","mpos":{"x":"0.000","y":"0.000","z":"0.000"},"wpos":{"x":"0.000","y":"0.000","z":"0.000"},"ov":[]},"parserstate":{"modal":{"motion":"G0","wcs":"G54","plane":"G17","units":"G21","distance":"G91","feedrate":"G94","spindle":"M5","coolant":"M9"},"tool":"0","feedrate":"0","spindle":"0"}}]
  
 
-
+https://github.com/Crazyglue/grbl-parser
 https://github.com/cncjs/cncjs-pendant-ps3/blob/master/index.js
 https://github.com/cncjs/cncjs/wiki/Controller-API
 

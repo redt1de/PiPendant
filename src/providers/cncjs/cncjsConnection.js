@@ -4,8 +4,8 @@ let socket = null;
 let gopt = null;
 /*
 options = {
-    cncjsAddress: '127.0.0.1',
-    cncjsPort: 8000,
+    socketAddress: '127.0.0.1',
+    socketPort: 8000,
     baudrate: 115200,
     controllerType: 'Grbl',
     port: '/dev/ttyUSB0',
@@ -44,14 +44,14 @@ export async function openSocket(options, onMessageHandler) {
     }
 
     // ✅ Fetch token
-    const token = await getCncjsToken(`http://${options.cncjsAddress}:${options.cncjsPort}`);
+    const token = await getCncjsToken(`http://${options.socketAddress}:${options.socketPort}`);
     if (!token) {
         console.error("❌ Could not obtain a CNCjs token. Aborting connection.");
         return;
     }
 
     // ✅ Establish connection (no `.onAny()` in Socket.IO 2.5.0)
-    socket = io(`ws://${options.cncjsAddress}:${options.cncjsPort}`, {
+    socket = io(`ws://${options.socketAddress}:${options.socketPort}`, {
         path: "/socket.io",
         query: { token },
     });
@@ -104,14 +104,14 @@ export function closeSocket() {
 
 
 export function openSerial(options){
-    socket.emit("open", options.port, {
+    socket.emit("open", options.serialPort, {
         baudrate: Number(options.baudrate),
         controllerType: options.controllerType
     });
 }
 
 export function closeSerial(){
-    socket.emit("close", gopt.port);
+    socket.emit("close", gopt.serialPort);
 }
 
 // ✅ Send G-code
@@ -121,7 +121,7 @@ export function sendGcode(gcode) {
         return;
     }
     console.log(`➡️ Sending G-Code: ${gcode}`);
-    socket.emit("command",gopt.port, "gcode", gcode);
+    socket.emit("command",gopt.serialPort, "gcode", gcode);
 }
 
 // ✅ Send a raw CNCjs command (e.g., workflow commands)
@@ -131,7 +131,7 @@ export function sendCncjsCommand(command, args = []) {
         return;
     }
     console.log(`➡️ Sending CNCjs Command: ${command}`, args);
-    socket.emit("command",gopt.port, command, ...args);
+    socket.emit("command",gopt.serialPort, command, ...args);
 }
 
 // ✅ Send raw serial data to the machine
@@ -141,7 +141,7 @@ export function sendRawSerial(data) {
         return;
     }
     console.log(`➡️ Sending Raw Serial Data: ${data}`);
-    socket.emit("writeln",gopt.port, data);
+    socket.emit("writeln",gopt.serialPort, data);
 }
 
 export function checkPorts(){

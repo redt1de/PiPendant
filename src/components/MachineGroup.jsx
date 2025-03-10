@@ -1,13 +1,13 @@
 import styles from './css/MachineGroup.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse, faLockOpen, faRotateBack, faStop, faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faLockOpen, faRotateBack } from '@fortawesome/free-solid-svg-icons';
 import { useContext } from 'react';
-import { CncjsContext } from '../cncjs/CncjsProvider';
+import { CncjsContext } from '../providers/cncjs/CncjsProvider';
 import HomingModal from "../util/HomingModal";
 import { useState } from 'react';
 
 export default function MachineGroup() {
-    const { sendGcode, sendCncjsCommand, sendRawSerial } = useContext(CncjsContext);
+    const { sendGcode, sendCncjsCommand } = useContext(CncjsContext);
     const [showModal, setShowModal] = useState(false);
 
     const handleHoming = (command) => {

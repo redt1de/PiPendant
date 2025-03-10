@@ -1,27 +1,3 @@
-/* .webcamContainer {
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 1024px;
-    height: 540px;
-    background: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.error {
-    color: red;
-    font-size: 1.5rem;
-} */
-
-
 .webcamContainer {
     position: absolute;
     top: 0px;
@@ -46,7 +22,6 @@ video {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    /* Prevents interactions */
 }
 
 .error {

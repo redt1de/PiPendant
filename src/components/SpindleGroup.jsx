@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import styles from './css/SpindleGroup.module.css';
-import { CncjsContext } from "../cncjs/CncjsProvider";
+import { CncjsContext } from "../providers/cncjs/CncjsProvider";
 import KeypadModal from '../util/KeypadModal';
 
 export default function SpindleGroup() {
@@ -8,7 +8,7 @@ export default function SpindleGroup() {
     const [prompt, setPrompt] = useState('Enter Value');
     const [currentCommand, setCurrentCommand] = useState('');
     const { grblState } = useContext(CncjsContext);
-    const { sendGcode, sendCncjsCommand, sendRawSerial } = useContext(CncjsContext);
+    const { sendGcode, sendRawSerial } = useContext(CncjsContext);
 
 
     const handleOpenKeypad = (command) => {

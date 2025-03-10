@@ -7,7 +7,7 @@ import { faDeleteLeft, faArrowRightToBracket } from "@fortawesome/free-solid-svg
 export default function GPadGroup({ onEnter, initialValue = "" }) {
     const [inputValue, setInputValue] = useState(initialValue);
     const [gcodeHistory, setGcodeHistory] = useState([]); // ✅ Stores entered commands
-    const [historyIndex, setHistoryIndex] = useState(-1); // ✅ Tracks position in history
+    const [setHistoryIndex] = useState(-1); // ✅ Tracks position in history
 
     const keypadLayout = [
         ["X", "G", "7", "8", "9", "UP"],

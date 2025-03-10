@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import styles from "./css/WebcamView.module.css";
-import { CncjsContext } from "../cncjs/CncjsProvider";
+import { CncjsContext } from "../providers/cncjs/CncjsProvider";
 
 export default function WebcamView() {
     const videoRef = useRef(null);
@@ -85,39 +85,3 @@ export default function WebcamView() {
         </div>
     );
 }
-
-// import React, { useRef, useEffect, useState } from "react";
-// import styles from "./css/WebcamView.module.css";
-
-// export default function WebcamView() {
-//     const videoRef = useRef(null);
-//     const [error, setError] = useState(null);
-
-//     useEffect(() => {
-//         async function startWebcam() {
-//             try {
-//                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-//                 if (videoRef.current) {
-//                     videoRef.current.srcObject = stream;
-//                 }
-//             } catch (err) {
-//                 setError("❌ Failed to access webcam. Please check your permissions.");
-//                 console.error("Webcam error:", err);
-//             }
-//         }
-
-//         startWebcam();
-
-//         return () => {
-//             if (videoRef.current && videoRef.current.srcObject) {
-//                 videoRef.current.srcObject.getTracks().forEach(track => track.stop());
-//             }
-//         };
-//     }, []);
-
-//     return (
-//         <div className={styles.webcamContainer}>
-//             {error ? <div className={styles.error}>{error}</div> : <video ref={videoRef} autoPlay playsInline />}
-//         </div>
-//     );
-// }
