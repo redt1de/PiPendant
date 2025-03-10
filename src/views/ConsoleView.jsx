@@ -43,8 +43,7 @@ export default function ConsoleView() {
                 <GPadGroup messages={machineMessages} onEnter={(input) => {
                     console.log('🚀 Sending Gcode:', input);
                     sendRawSerial(input);
-                    // sendCncjsCommand('gcode', [input]);
-                    // sendGcode(input);
+
                 }} />
             </div>
 

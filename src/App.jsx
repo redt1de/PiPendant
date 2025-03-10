@@ -2,8 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import styles from './App.module.css';
-import { CncjsProvider } from './providers/cncjs/CncjsProvider';
-import { FluidNCProvider } from './providers/fluidnc/FluidNCProvider';
+import { CNCProvider } from "./providers/CNCProvider";
 import ControlView from './views/ControlView';
 import ConsoleView from './views/ConsoleView';
 import MacrosView from './views/MacrosView';
@@ -24,24 +23,13 @@ function App() {
   }, []);
 
   if (!config) return <div>Loading...</div>;
-  // ✅ Dynamically select the provider
-  let Provider;
-  switch (config.socketProvider) {
-    case "fluidnc":
-      Provider = FluidNCProvider;
-      break;
-    case "cncjs":
-    default:
-      Provider = CncjsProvider;
-      break;
-  }
+
 
 
 
   return (
 
-    <Provider options={config}>
-
+    <CNCProvider options={config}>
       <div className={styles.appContainer}>
         <Router>
           <nav className={styles.tabBar}>
@@ -78,8 +66,8 @@ function App() {
           </div>
         </Router>
       </div>
-      <DisconnectedOverlay /> {/* ✅ Overlay blocks UI when disconnected */}
-    </Provider>
+      <DisconnectedOverlay />
+    </CNCProvider>
   );
 }
 

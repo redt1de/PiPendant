@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useContext } from "react";
-import { CncjsContext } from "../providers/cncjs/CncjsProvider";
+// import { CncjsContext } from "../providers/cncjs/CncjsProvider";
+import { useCNC } from "../providers/CNCContext";
 import styles from "./css/ConsoleGroup.module.css";
 
 
@@ -18,7 +19,9 @@ const syntaxMatchers = {
 
 
 export default function ConsoleGroup() {
-    const { consoleMessages = [] } = useContext(CncjsContext); // ✅ Ensure messages update
+
+    // const { consoleMessages = [] } = useContext(CncjsContext); // ✅ Ensure messages update
+    const { isConnected, consoleMessages, connect, disconnect, send } = useCNC();
 
     const scrollRef = useRef(null);
 
@@ -31,14 +34,7 @@ export default function ConsoleGroup() {
 
     // ✅ Function to apply syntax highlighting
 
-    // const checkFilter = (msg) => {
-    //     for (const [pattern, style] of Object.entries(msgFilters)) {
-    //         if (new RegExp(pattern, "i").test(msg)) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
+
 
     const getHighlightedMessage = (msg) => {
         for (const [pattern, style] of Object.entries(syntaxMatchers)) {

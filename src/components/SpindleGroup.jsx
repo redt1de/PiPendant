@@ -1,14 +1,15 @@
 import React, { useState, useContext } from 'react';
 import styles from './css/SpindleGroup.module.css';
-import { CncjsContext } from "../providers/cncjs/CncjsProvider";
+// import { CncjsContext } from "../providers/cncjs/CncjsProvider";
 import KeypadModal from '../util/KeypadModal';
 
 export default function SpindleGroup() {
     const [showKeypad, setShowKeypad] = useState(false);
     const [prompt, setPrompt] = useState('Enter Value');
     const [currentCommand, setCurrentCommand] = useState('');
-    const { grblState } = useContext(CncjsContext);
-    const { sendGcode, sendRawSerial } = useContext(CncjsContext);
+    const grblState = null;
+    // const { grblState } = useContext(CncjsContext);
+    // const { sendGcode, sendRawSerial } = useContext(CncjsContext);
 
 
     const handleOpenKeypad = (command) => {
@@ -46,17 +47,17 @@ export default function SpindleGroup() {
             case 'm3':
                 // e.g., "M3 S{value}"
                 console.log(`Send command: M3 S${value}`);
-                sendRawSerial(`M3 S${value}`);
+                // sendRawSerial(`M3 S${value}`);
                 break;
             case 'm4':
                 // e.g., "M4 S{value}"
                 console.log(`Send command: M4 S${value}`);
-                sendRawSerial(`M4 S${value}`);
+                // sendRawSerial(`M4 S${value}`);
                 break;
             case 'm6':
                 // e.g., "M6 T{value}"
                 console.log(`Send command: M6 T${value}`);
-                sendRawSerial(`M6 T${value}`);
+                // sendRawSerial(`M6 T${value}`);
                 break;
             default:
                 console.log('Unknown command');
@@ -68,7 +69,7 @@ export default function SpindleGroup() {
     // Example simple M5 logic (stop spindle) - no keypad
     const handleM5 = () => {
         console.log('Send command: M5 (stop spindle)');
-        sendGcode(`M5`);
+        // sendGcode(`M5`);
     };
 
     return (

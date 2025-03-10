@@ -1,8 +1,10 @@
 import React, { useContext } from "react"; import styles from './css/MDI.module.css';
-import { CncjsContext } from "../providers/cncjs/CncjsProvider";
+// import { CncjsContext } from "../providers/cncjs/CncjsProvider";
 
 export default function MDI({ positions = {} }) {
-    const { grblState } = useContext(CncjsContext);
+    const grblState = null;
+    // const { grblState } = useContext(CncjsContext);
+
     return (
         <div className={styles.mdiContainer}>
 
