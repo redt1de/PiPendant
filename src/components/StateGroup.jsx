@@ -1,15 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./css/StateGroup.module.css";
-// import { CncjsContext } from "../providers/cncjs/CncjsProvider";
+import { useCNC } from "../providers/CNCContext";
 
 export default function StateGroup() {
-    const grblState = null;
-    const consoleMessages = [];
-    // const { grblState, consoleMessages = [] } = useContext(CncjsContext);
+    const { isConnected, send, consoleMessages, machineState } = useCNC();
     const [infoMessage, setInfoMessage] = useState("");
 
     // ✅ Ensure gState is always a valid string
-    const gState = grblState?.status?.activeState ? grblState.status.activeState.toLowerCase() : "unknown";
+    const gState = machineState?.state || "unknown";
 
     // ✅ Determine the state class for background color
     const getStateClass = () => {
@@ -48,7 +46,7 @@ export default function StateGroup() {
 
             <label className={styles.infoLabel} htmlFor="info">Msg:</label>
             <label className={styles.info} id="info">
-                {infoMessage || "No messages"}
+                {infoMessage || ""}
             </label>
         </div>
     );

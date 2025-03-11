@@ -4,7 +4,6 @@ import ConsoleGroup from '../components/ConsoleGroup';
 import GPadGroup from '../components/GPadGroup';
 import { useEffect, useState } from 'react';
 import { useContext } from 'react';
-import { CncjsContext } from '../providers/cncjs/CncjsProvider';
 import Frame from '../util/Frame';
 import MDI from '../components/MDI';
 import SpindleGroup from '../components/SpindleGroup';
@@ -12,10 +11,10 @@ import styles from './css/ConsoleView.module.css';
 import MachineGroup from '../components/MachineGroup';
 import CycleGroup from '../components/CycleGroup';
 import StateGroup from '../components/StateGroup';
-
+import { useCNC } from "../providers/CNCContext";
 
 export default function ConsoleView() {
-    const { sendGcode, sendCncjsCommand, sendRawSerial } = useContext(CncjsContext);
+    const { isConnected, send, consoleMessages, machineState } = useCNC();
     const [machineMessages, setMachineMessages] = useState([
         'Initializing...',
         'Waiting for data...'
@@ -42,7 +41,7 @@ export default function ConsoleView() {
             <div style={{ position: 'absolute', bottom: '0px', left: '10px' }}>
                 <GPadGroup messages={machineMessages} onEnter={(input) => {
                     console.log('🚀 Sending Gcode:', input);
-                    sendRawSerial(input);
+                    send(input);
 
                 }} />
             </div>

@@ -1,16 +1,16 @@
 import styles from './css/ZeroGroup.module.css';
 import { useContext } from 'react';
-// import { CncjsContext } from '../providers/cncjs/CncjsProvider';
+import { useCNC } from "../providers/CNCContext";
 
 export default function ZeroGroup() {
-    // const { sendGcode } = useContext(CncjsContext);
+    const { isConnected, send, consoleMessages, machineState } = useCNC();
     return (
         // <Frame title="Zero">
         <div className={styles.zeroContainer}>
-            <button /*onClick={() => sendGcode("G92 X0Y0Z0")}*/>G92XYZ</button>
-            <button /*onClick={() => sendGcode("G92 X0")}*/>G92 X0</button>
-            <button /*onClick={() => sendGcode("G92 Y0")}*/>G92 Y0</button>
-            <button /*onClick={() => sendGcode("G92 Z0")}*/>G92 Z0</button>
+            <button onClick={() => send("G10 L20 P1 X0 Y0 Z0")}>Zero All</button>
+            <button onClick={() => send("G10 L20 P1 X0")}>Zero X</button>
+            <button onClick={() => send("G10 L20 P1 Y0")}>Zero Y</button>
+            <button onClick={() => send("G10 L20 P1 Z0")}>Zero Z</button>
         </div>
         // </Frame>
     );

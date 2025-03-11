@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import styles from './css/JogButtonGroup.module.css';
 import { useContext } from 'react';
-// import { CncjsContext } from '../providers/cncjs/CncjsProvider';
+import { useCNC } from "../providers/CNCContext";
 import YesNoDialog from "../util/YesNoDialog";
 
 export default function JogButtonGroup() {
     const [stepSize, setStepSize] = useState('10.0');
-    // const { sendGcode } = useContext(CncjsContext);
+    const { isConnected, consoleMessages, connect, disconnect, send, machineState } = useCNC();
 
     const [showDialog, setShowDialog] = useState(false);
 
     const handleConfirm = () => {
         setShowDialog(false);
         console.log('Sending G0 Z0');
-        // sendGcode(`G90 G0 Z0`);
+        send(`G90 G0 Z0`);
     };
 
     const handleCancel = () => {
@@ -49,18 +49,18 @@ export default function JogButtonGroup() {
             </div>
 
             <div className={styles.jogContainer}>
-                <button /*onClick={() => sendGcode(`G91 G0 X-${stepSize} Y${stepSize}`)}*/>↖</button>
-                <button /*onClick={() => sendGcode(`G91 G0 Y${stepSize}`)} */>▲</button>
-                <button /*onClick={() => sendGcode(`G91 G0 X${stepSize} Y${stepSize}`)}*/>↗</button>
-                <button /*onClick={() => sendGcode(`G91 G0 Z${stepSize}`)}*/>Z+</button>
-                <button /*onClick={() => sendGcode(`G91 G0 X-${stepSize}`)}*/>◄</button>
-                <button /*onClick={() => sendGcode(`G90 G0 X0 Y0`)}*/>O</button>
-                <button /*onClick={() => sendGcode(`G91 G0 X${stepSize}`)}*/>►</button>
-                <button /*onClick={() => setShowDialog(true)}*/>O</button>
-                <button /*onClick={() => sendGcode(`G91 G0 X-${stepSize} Y-${stepSize}`)}*/>↙</button>
-                <button /*onClick={() => sendGcode(`G91 G0 Y-${stepSize}`)}*/>▼</button>
-                <button /*onClick={() => sendGcode(`G91 G0 X${stepSize} Y-${stepSize}`)}*/>↘</button>
-                <button /*onClick={() => sendGcode(`G91 G0 Z-${stepSize}`)}*/>Z-</button>
+                <button onClick={() => send(`G91 G0 X-${stepSize} Y${stepSize}`)}>↖</button>
+                <button onClick={() => send(`G91 G0 Y${stepSize}`)} >▲</button>
+                <button onClick={() => send(`G91 G0 X${stepSize} Y${stepSize}`)}>↗</button>
+                <button onClick={() => send(`G91 G0 Z${stepSize}`)}>Z+</button>
+                <button onClick={() => send(`G91 G0 X-${stepSize}`)}>◄</button>
+                <button onClick={() => send(`G90 G0 X0 Y0`)}>O</button>
+                <button onClick={() => send(`G91 G0 X${stepSize}`)}>►</button>
+                <button onClick={() => setShowDialog(true)}>O</button>
+                <button onClick={() => send(`G91 G0 X-${stepSize} Y-${stepSize}`)}>↙</button>
+                <button onClick={() => send(`G91 G0 Y-${stepSize}`)}>▼</button>
+                <button onClick={() => send(`G91 G0 X${stepSize} Y-${stepSize}`)}>↘</button>
+                <button onClick={() => send(`G91 G0 Z-${stepSize}`)}>Z-</button>
 
             </div>
         </div>

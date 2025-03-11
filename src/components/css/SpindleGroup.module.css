@@ -1,7 +1,7 @@
 .spindleContainer {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     border-radius: 8px;
     overflow: hidden;
     gap: 10px;
@@ -53,6 +53,6 @@
 .toolTdV {
     border: 1px solid #555;
     padding: 10px;
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: #0f0;
 }

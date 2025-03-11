@@ -3,15 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStop, faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
 import { useContext } from 'react';
 import { useCNC } from "../providers/CNCContext";
-// import { CncjsContext } from '../providers/cncjs/CncjsProvider';
 
 export default function CycleGroup() {
-    // const { sendCncjsCommand } = useContext(CncjsContext);
-    const { isConnected, send, consoleMessages } = useCNC();
+    const { isConnected, consoleMessages, connect, disconnect, send, machineState } = useCNC();
     return (
 
         <div className={styles.cycleContainer}>
-            <button onClick={() => send(`$G`)}><FontAwesomeIcon icon={faPlay} /></button>
+            <button onClick={() => send(`?\n$G\n$#`)}><FontAwesomeIcon icon={faPlay} /></button>
             <button><FontAwesomeIcon icon={faPause} /></button>
             <button><FontAwesomeIcon icon={faStop} /></button>
         </div>

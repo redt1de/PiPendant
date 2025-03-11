@@ -1,73 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CNCContext } from "./CNCContext";
 import { FluidNCProvider } from "./fluidnc/FluidNCProvider";
 
 export function CNCProvider({ options, children }) {
-    const [provider, setProvider] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
-    const [forceUpdate, setForceUpdate] = useState(0);
+    const [machineState, setMachineState] = useState({});
+    const providerRef = useRef(null); // ✅ Store provider instance persistently
 
     useEffect(() => {
-        let selectedProvider;
+        // ✅ Only initialize the provider once
+        if (!providerRef.current) {
+            console.log("🔄 Initializing CNC Provider...");
 
-        switch (options.socketProvider) {
-            case "fluidnc":
-                selectedProvider = new FluidNCProvider(options, () => {
-                    setForceUpdate((prev) => prev + 1);
-                    setIsConnected(selectedProvider.isConnected); // ✅ Track connection state
-                });
-                break;
-            default:
-                console.error("❌ No valid provider selected!");
-                return;
+            let selectedProvider;
+            switch (options.socketProvider) {
+                case "fluidnc":
+                    selectedProvider = new FluidNCProvider(options, () => {
+                        setIsConnected(selectedProvider.isConnected);
+                        setMachineState({ ...selectedProvider.machineState });
+                    });
+                    break;
+                default:
+                    console.error("❌ No valid provider selected!");
+                    return;
+            }
+
+            providerRef.current = selectedProvider;
         }
 
-        setProvider(selectedProvider);
-
+        // ✅ Cleanup on unmount (but not on every re-render)
         return () => {
-            console.log("🛑 Unmounting CNC Provider...");
-            selectedProvider?.disconnect();
+            console.log("🛑 CNCProvider is being unmounted...");
+            providerRef.current?.disconnect();
         };
-    }, [options.socketProvider]);
+    }, []); // ✅ Empty dependency array ensures this runs only once
 
-    if (!provider) return <div>Loading CNC Provider...</div>;
+    if (!providerRef.current) return <div>Loading CNC Provider...</div>;
 
     return (
-        <CNCContext.Provider value={{ ...provider, isConnected }}>
+        <CNCContext.Provider value={{ ...providerRef.current, isConnected, machineState }}>
             {children}
         </CNCContext.Provider>
     );
 }
-
-// import React, { useState, useEffect } from "react";
-// import { CNCContext } from "./CNCContext";
-// import { FluidNCProvider } from "./fluidnc/FluidNCProvider";
-
-// export function CNCProvider({ options, children }) {
-//     const [provider, setProvider] = useState(null);
-//     const [forceUpdate, setForceUpdate] = useState(0);
-
-//     useEffect(() => {
-//         let selectedProvider;
-
-//         switch (options.socketProvider) {
-//             case "fluidnc":
-//                 selectedProvider = new FluidNCProvider(options, () => setForceUpdate((prev) => prev + 1));
-//                 break;
-//             default:
-//                 console.error("❌ No valid provider selected!");
-//                 return;
-//         }
-
-//         setProvider(selectedProvider);
-
-//         return () => {
-//             console.log("🛑 Unmounting CNC Provider...");
-//             selectedProvider?.disconnect();
-//         };
-//     }, [options.socketProvider]); // ✅ Only recreate provider if socket provider changes
-
-//     if (!provider) return <div>Loading CNC Provider...</div>;
-
-//     return <CNCContext.Provider value={provider}>{children}</CNCContext.Provider>;
-// }

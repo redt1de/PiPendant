@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useContext } from "react";
-// import { CncjsContext } from "../providers/cncjs/CncjsProvider";
 import { useCNC } from "../providers/CNCContext";
 import styles from "./css/ConsoleGroup.module.css";
 
@@ -13,15 +12,12 @@ const syntaxMatchers = {
     "\\[DBG:.*\\]": styles.debug // Debug messages
 };
 
-// const msgFilters = [
-//     "$G"
-// ];
+
 
 
 export default function ConsoleGroup() {
 
-    // const { consoleMessages = [] } = useContext(CncjsContext); // ✅ Ensure messages update
-    const { isConnected, consoleMessages, connect, disconnect, send } = useCNC();
+    const { isConnected, consoleMessages, connect, disconnect, send, machineState } = useCNC();
 
     const scrollRef = useRef(null);
 
@@ -49,7 +45,6 @@ export default function ConsoleGroup() {
         <div className={styles.consoleContainer} ref={scrollRef}>
             {consoleMessages.length > 0 ? (
                 consoleMessages.map((msg, i) => (
-                    // checkFilter(msg) &&
                     <div key={i} className={styles.consoleLine}>
                         {getHighlightedMessage(msg)}
                     </div>

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import styles from './css/SpindleGroup.module.css';
-// import { CncjsContext } from "../providers/cncjs/CncjsProvider";
+import { useCNC } from "../providers/CNCContext";
 import KeypadModal from '../util/KeypadModal';
 
 export default function SpindleGroup() {
@@ -8,8 +8,7 @@ export default function SpindleGroup() {
     const [prompt, setPrompt] = useState('Enter Value');
     const [currentCommand, setCurrentCommand] = useState('');
     const grblState = null;
-    // const { grblState } = useContext(CncjsContext);
-    // const { sendGcode, sendRawSerial } = useContext(CncjsContext);
+    const { isConnected, send, consoleMessages, machineState } = useCNC();
 
 
     const handleOpenKeypad = (command) => {
@@ -47,17 +46,17 @@ export default function SpindleGroup() {
             case 'm3':
                 // e.g., "M3 S{value}"
                 console.log(`Send command: M3 S${value}`);
-                // sendRawSerial(`M3 S${value}`);
+                send(`M3 S${value}`);
                 break;
             case 'm4':
                 // e.g., "M4 S{value}"
                 console.log(`Send command: M4 S${value}`);
-                // sendRawSerial(`M4 S${value}`);
+                send(`M4 S${value}`);
                 break;
             case 'm6':
                 // e.g., "M6 T{value}"
                 console.log(`Send command: M6 T${value}`);
-                // sendRawSerial(`M6 T${value}`);
+                send(`M6 T${value}`);
                 break;
             default:
                 console.log('Unknown command');
@@ -69,7 +68,7 @@ export default function SpindleGroup() {
     // Example simple M5 logic (stop spindle) - no keypad
     const handleM5 = () => {
         console.log('Send command: M5 (stop spindle)');
-        // sendGcode(`M5`);
+        send(`M5`);
     };
 
     return (
@@ -79,11 +78,15 @@ export default function SpindleGroup() {
                     <tbody>
                         <tr>
                             <td className={styles.toolLabel}>T</td>
-                            <td className={styles.toolTdV}>{(grblState && grblState.parserstate.tool) ?? -1}</td>
+                            <td className={styles.toolTdV}>{(machineState && machineState.modal?.tool) ?? -1}</td>
+                        </tr>
+                        <tr>
+                            <td className={styles.toolLabel}>TLO</td>
+                            <td className={styles.toolTdV}>{(machineState && machineState.tlo) ?? -1}</td>
                         </tr>
                         <tr>
                             <td className={styles.toolLabel}>S</td>
-                            <td className={styles.toolTdV}>{(grblState && grblState.parserstate.spindle) ?? -1}</td>
+                            <td className={styles.toolTdV}>{(machineState && machineState.modal?.spindleSpeed) ?? -1}</td>
                         </tr>
                     </tbody>
                 </table>

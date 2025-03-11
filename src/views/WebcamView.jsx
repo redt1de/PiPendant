@@ -1,12 +1,12 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import styles from "./css/WebcamView.module.css";
-import { CncjsContext } from "../providers/cncjs/CncjsProvider";
+import { useCNC } from "../providers/CNCContext";
 
 export default function WebcamView() {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const [error, setError] = useState(null);
-    const { grblState } = useContext(CncjsContext); // ✅ Get coordinates from CNCjs
+    const { isConnected, send, consoleMessages, machineState } = useCNC();
 
     useEffect(() => {
         async function startWebcam() {
@@ -58,9 +58,12 @@ export default function WebcamView() {
             // Draw coordinate text in the top-left corner
             ctx.fillStyle = "yellow";
             ctx.font = "16px Arial";
-            const x = (grblState && grblState.status.wpos.x) ?? -199.999;
-            const y = (grblState && grblState.status.wpos.y) ?? -199.999;
-            const z = (grblState && grblState.status.wpos.z) ?? -199.999;
+            // const x = (grblState && grblState.status.wpos.x) ?? -199.999;
+            // const y = (grblState && grblState.status.wpos.y) ?? -199.999;
+            // const z = (grblState && grblState.status.wpos.z) ?? -199.999;
+            const x = "??";
+            const y = "??";
+            const z = "??";
 
             ctx.fillText(`X: ${x}`, 10, 20);
             ctx.fillText(`Y: ${y}`, 10, 40);
@@ -70,7 +73,7 @@ export default function WebcamView() {
 
         const interval = setInterval(drawOverlay, 100); // Refresh overlay every 100ms
         return () => clearInterval(interval);
-    }, [grblState]); // Redraw when coordinates update
+    }, [machineState]); // Redraw when coordinates update
 
     return (
         <div className={styles.webcamContainer}>
