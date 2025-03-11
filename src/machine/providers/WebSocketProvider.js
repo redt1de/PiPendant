@@ -28,6 +28,7 @@ export class WebSocketProvider extends BaseProvider {
         };
 
         this.socket.onmessage = async (event) => {
+            // console.log(">>>>>",event);
             if (event.data instanceof Blob) {
                 event.data.text().then((text) => {
                     this.onData(text);  // ✅ Pass directly to GrblController

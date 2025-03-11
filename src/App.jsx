@@ -5,7 +5,7 @@ import styles from './App.module.css';
 import { CNCProvider } from "./machine/providers/CNCProvider";
 import ControlView from './views/ControlView';
 import ConsoleView from './views/ConsoleView';
-import MacrosView from './views/MacrosView';
+import RunView from './views/RunView';
 import FilesView from './views/FilesView';
 import AutolevelView from './views/AutolevelView';
 import DisconnectedOverlay from './util/DisconnectedOverlay';
@@ -39,14 +39,14 @@ function App() {
             <NavLink to="/console" title="Console" className={({ isActive }) => isActive ? styles.active : ""}>
               Console
             </NavLink>
-            <NavLink to="/macros" title="Macros" className={({ isActive }) => isActive ? styles.active : ""}>
-              Macros
+            <NavLink to="/run" title="Run" className={({ isActive }) => isActive ? styles.active : ""}>
+              Run
             </NavLink>
             <NavLink to="/files" title="Files" className={({ isActive }) => isActive ? styles.active : ""}>
-              File
+              ???
             </NavLink>
             <NavLink to="/autolevel" title="Autolevel" className={({ isActive }) => isActive ? styles.active : ""}>
-              Autolevel??
+              ???
             </NavLink>
             <NavLink to="/webcam" title="Webcam" className={({ isActive }) => isActive ? styles.active : ""}>
               Webcam
@@ -58,7 +58,7 @@ function App() {
               <Route path="/" element={<Navigate to="/control" replace />} />
               <Route path="/control" element={<ControlView />} />
               <Route path="/console" element={<ConsoleView />} />
-              <Route path="/macros" element={<MacrosView />} />
+              <Route path="/run" element={<RunView />} />
               <Route path="/files" element={<FilesView />} />
               <Route path="/autolevel" element={<AutolevelView />} />
               <Route path="/webcam" element={<WebcamView />} />

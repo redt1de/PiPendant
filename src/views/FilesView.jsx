@@ -10,3 +10,12 @@ export default function FilesView() {
         </div>
     );
 }
+
+/*
+$Files/ListGcode
+
+{"files":[{"name":"Spoilboard","size":"-1"},{"name":"grid.nc","size":"580"},{"name":"drill.nc","size
+":"5589"},{"name":"Macros","size":"-1"}],"path":""}
+
+ok
+*/
