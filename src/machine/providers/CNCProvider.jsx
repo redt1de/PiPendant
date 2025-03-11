@@ -1,6 +1,8 @@
 import React, { useRef, createContext, useContext, useState, useEffect } from "react";
-import GrblController from "./GrblController";
-import { FluidNCProvider } from "./fluidnc/FluidNCProvider";
+
+import { WebSocketProvider } from "./WebSocketProvider";
+import GrblController from "../controllers/GrblController";
+import FluidNCController from "../controllers/FluidNCController";
 
 const CNCContext = createContext();
 
@@ -8,18 +10,30 @@ export function CNCProvider({ options, children }) {
     const [isConnected, setIsConnected] = useState(false);
     const [machineState, setMachineState] = useState({});
     const [consoleMessages, setConsoleMessages] = useState([]);
-    const grblController = useRef(new GrblController());
+    const controllerRef = useRef(null);
     const providerRef = useRef(null);
 
     useEffect(() => {
         if (!providerRef.current) {
             console.log("🔄 Initializing CNC Provider...");
+            switch (options.controllerType) {
+                case "fluidnc":
+                    console.log("🔧 Using FluidNC Controller...");
+                    controllerRef.current = new FluidNCController();
+                    break;
+                default:
+                    console.log("🔧 Using Grbl Controller...");
+                    controllerRef.current = new GrblController();
+                    break;
+            }
+
             let selectedProvider;
             switch (options.socketProvider) {
-                case "fluidnc":
-                    selectedProvider = new FluidNCProvider(options, () => {
+                case "websocket":
+                    console.log("🔧 Using WebSocket Provider...");
+                    selectedProvider = new WebSocketProvider(options, () => {
                         setIsConnected(selectedProvider.isConnected);
-                    }, (data) => grblController.current.parseData(data));
+                    }, (data) => controllerRef.current.parseData(data));
                     break;
                 default:
                     console.error("❌ No valid provider selected!");
@@ -28,7 +42,7 @@ export function CNCProvider({ options, children }) {
             providerRef.current = selectedProvider;
         }
 
-        grblController.current.addListener((state, messages) => {
+        controllerRef.current.addListener((state, messages) => {
             setMachineState({ ...state });
             setConsoleMessages([...messages]);
         });
@@ -37,12 +51,12 @@ export function CNCProvider({ options, children }) {
             console.log("🛑 CNCProvider is being unmounted...");
             providerRef.current?.disconnect();
         };
-    }, []);
+    }, [options]);
 
     if (!providerRef.current) return <div>Loading CNC Provider...</div>;
 
     return (
-        <CNCContext.Provider value={{ isConnected, machineState, consoleMessages, send: providerRef.current.send }}>
+        <CNCContext.Provider value={{ isConnected, machineState, consoleMessages, sendRaw: providerRef.current.sendRaw, send: providerRef.current.send }}>
             {children}
         </CNCContext.Provider>
     );

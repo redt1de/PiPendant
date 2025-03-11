@@ -1,6 +1,6 @@
-import { BaseProvider } from "../BaseProvider";
+import { BaseProvider } from "./BaseProvider";
 
-export class FluidNCProvider extends BaseProvider {
+export class WebSocketProvider extends BaseProvider {
     constructor(options, onUpdate, onData) {
         super(onData);
         this.options = options;
@@ -14,16 +14,16 @@ export class FluidNCProvider extends BaseProvider {
 
     connect = () => {
         if (this.socket) {
-            console.warn("⚠️ Already connected to FluidNC");
+            console.warn("⚠️ Already connected to WebSocket");
             return;
         }
 
-        console.log(`🔌 Connecting to FluidNC WebSocket: ws://${this.options.socketAddress}:81`);
+        console.log(`🔌 Connecting to WebSocket: ws://${this.options.socketAddress}:81`);
         this.socket = new WebSocket(`ws://${this.options.socketAddress}:81`);
 
         this.socket.onopen = () => {
             this.isConnected = true;
-            console.log("✅ FluidNC WebSocket connected");
+            console.log("✅ WebSocket connected");
             this.onUpdate();
         };
 
@@ -38,7 +38,7 @@ export class FluidNCProvider extends BaseProvider {
         };
 
         this.socket.onclose = () => {
-            console.warn("🔌 FluidNC WebSocket disconnected");
+            console.warn("🔌 WebSocket disconnected");
             this.isConnected = false;
             this.socket = null;
             this.onUpdate();
@@ -46,7 +46,7 @@ export class FluidNCProvider extends BaseProvider {
         };
 
         this.socket.onerror = (error) => {
-            console.error("❌ FluidNC WebSocket error:", error);
+            console.error("❌ WebSocket error:", error);
             this.socket?.close();
             this.socket = null;
         };
@@ -54,11 +54,11 @@ export class FluidNCProvider extends BaseProvider {
 
     disconnect = () => {
         if (!this.socket) {
-            console.warn("⚠️ No active FluidNC connection to disconnect.");
+            console.warn("⚠️ No active connection to disconnect.");
             return;
         }
 
-        console.log("❌ Manually disconnecting from FluidNC");
+        console.log("❌ Manually disconnecting from WebSocket");
         clearTimeout(this.reconnectTimeout);
         
         if (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING) {
@@ -72,10 +72,31 @@ export class FluidNCProvider extends BaseProvider {
 
     send = (command) => {
         if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+            this.onData(command); // ✅ Pass directly to GrblController
             this.socket.send(command + "\n");
+            // this.consoleMessages.push(`➡️ ${command}`);
+            console.log(`➡️ Sent to FluidNC: ${command}`);
+            if (this.onUpdate) this.onUpdate();
+        } else {
+            console.error("❌ Cannot send command: WebSocket is not connected.");
+        }
+    };
+
+    sendRaw = (data) => {
+        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+            
+            if (typeof data === "number") {
+                this.onData("Raw: 0x"+data.toString(16)); // echo back to GrblController
+                this.socket.send(new Uint8Array([data]));
+            } else {
+                this.onData(data); // echo back to GrblController
+                this.socket.send(data + "\n");
+            }
+    
+            // this.consoleMessages.push(`➡️ Sent: ${data}`);
             this.onUpdate();
         } else {
-            console.error("❌ Cannot send command: FluidNC WebSocket is not connected.");
+            console.error("❌ Cannot send command: WebSocket is not connected.");
         }
     };
 

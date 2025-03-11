@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import styles from './App.module.css';
-import { CNCProvider } from "./providers/CNCProvider";
+import { CNCProvider } from "./machine/providers/CNCProvider";
 import ControlView from './views/ControlView';
 import ConsoleView from './views/ConsoleView';
 import MacrosView from './views/MacrosView';

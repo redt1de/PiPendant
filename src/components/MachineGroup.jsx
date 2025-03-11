@@ -2,7 +2,7 @@ import styles from './css/MachineGroup.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faLockOpen, faRotateBack } from '@fortawesome/free-solid-svg-icons';
 import { useContext } from 'react';
-import { useCNC } from "../providers/CNCProvider";
+import { useCNC } from "../machine/providers/CNCProvider";
 import HomingModal from "../util/HomingModal";
 import { useState } from 'react';
 

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import styles from "./css/WebcamView.module.css";
-import { useCNC } from "../providers/CNCProvider";
+import { useCNC } from "../machine/providers/CNCProvider";
 
 export default function WebcamView() {
     const videoRef = useRef(null);
@@ -58,12 +58,10 @@ export default function WebcamView() {
             // Draw coordinate text in the top-left corner
             ctx.fillStyle = "yellow";
             ctx.font = "16px Arial";
-            // const x = (grblState && grblState.status.wpos.x) ?? -199.999;
-            // const y = (grblState && grblState.status.wpos.y) ?? -199.999;
-            // const z = (grblState && grblState.status.wpos.z) ?? -199.999;
-            const x = "??";
-            const y = "??";
-            const z = "??";
+            const x = (machineState && machineState.wpos?.x) ?? -199.999;
+            const y = (machineState && machineState.wpos?.y) ?? -199.999;
+            const z = (machineState && machineState.wpos?.z) ?? -199.999;
+
 
             ctx.fillText(`X: ${x}`, 10, 20);
             ctx.fillText(`Y: ${y}`, 10, 40);

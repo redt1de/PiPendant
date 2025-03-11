@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./css/StateGroup.module.css";
-import { useCNC } from "../providers/CNCProvider";
+import { useCNC } from "../machine/providers/CNCProvider";
 
 export default function StateGroup() {
     const { isConnected, send, consoleMessages, machineState } = useCNC();
@@ -20,7 +20,7 @@ export default function StateGroup() {
             check: styles.check,
             door: styles.door
         };
-        return stateMap[gState] || styles.idle; // Defaults to "idle"
+        return stateMap[gState.toLowerCase()] || styles.idle; // Defaults to "idle"
     };
 
     // ✅ Extract  messages from console output

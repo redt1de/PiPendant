@@ -1,5 +1,12 @@
 import EventEmitter from "events";
 
+const excludedPatterns = [
+    /^PING:.*/, // Ignore "PING: ..." messages
+    /^CURRENT_ID:.*/,
+    /^ACTIVE_ID:.*/,
+    /^\$G$/     // Ignore "$G" status requests
+];
+
 export default class GrblController extends EventEmitter {
     constructor() {
         super();
@@ -35,6 +42,10 @@ export default class GrblController extends EventEmitter {
         };
         this.consoleMessages = [];
         this.listeners = []; // ✅ Ensure listeners array is initialized
+
+        this.on("error", (err) => {
+            console.error("GrblController Error:", err);
+        });
     }
 
     addListener(callback) {
@@ -48,15 +59,22 @@ export default class GrblController extends EventEmitter {
         this.listeners.forEach(callback => callback(this.machineState, this.consoleMessages));
     }
 
+    shouldConsole(message){
+        if (excludedPatterns.some((regex) => regex.test(message))) {
+            return;
+        }
+
+        this.consoleMessages.push(message);
+        if (this.consoleMessages.length > 200) {  // ✅ Keep console buffer limited
+            this.consoleMessages.shift();
+        }
+    }
+
     parseData(line) {
         line = line.trim();
         if (!line) return;
 
-        // ✅ Store all messages
-        this.consoleMessages.push(line);
-        if (this.consoleMessages.length > 200) {  // ✅ Keep console buffer limited
-            this.consoleMessages.shift();
-        }
+
         if (line.startsWith("<")) {
             const statusUpdate = this.parseStatus(line);
             Object.assign(this.machineState, statusUpdate);
@@ -86,6 +104,8 @@ export default class GrblController extends EventEmitter {
         } else {
             this.emit("message", { message: line });
         }
+
+        this.shouldConsole(line);
 
         this.notifyListeners();
     }

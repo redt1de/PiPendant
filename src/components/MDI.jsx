@@ -1,5 +1,5 @@
 import React, { useContext } from "react"; import styles from './css/MDI.module.css';
-import { useCNC } from "../providers/CNCProvider";
+import { useCNC } from "../machine/providers/CNCProvider";
 
 export default function MDI({ positions = {} }) {
     const { isConnected, send, consoleMessages, machineState } = useCNC();

@@ -2,7 +2,7 @@ import styles from './css/CycleGroup.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStop, faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
 import { useContext } from 'react';
-import { useCNC } from "../providers/CNCProvider";
+import { useCNC } from "../machine/providers/CNCProvider";
 
 export default function CycleGroup() {
     const { isConnected, consoleMessages, connect, disconnect, send, machineState } = useCNC();

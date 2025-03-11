@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './css/JogButtonGroup.module.css';
 import { useContext } from 'react';
-import { useCNC } from "../providers/CNCProvider";
+import { useCNC } from "../machine/providers/CNCProvider";
 import YesNoDialog from "../util/YesNoDialog";
 
 export default function JogButtonGroup() {
