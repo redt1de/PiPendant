@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import styles from './css/SpindleGroup.module.css';
-import { useCNC } from "../providers/CNCContext";
+import { useCNC } from "../providers/CNCProvider";
 import KeypadModal from '../util/KeypadModal';
 
 export default function SpindleGroup() {

@@ -1,6 +1,6 @@
 import styles from './css/ZeroGroup.module.css';
 import { useContext } from 'react';
-import { useCNC } from "../providers/CNCContext";
+import { useCNC } from "../providers/CNCProvider";
 
 export default function ZeroGroup() {
     const { isConnected, send, consoleMessages, machineState } = useCNC();

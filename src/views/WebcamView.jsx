@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import styles from "./css/WebcamView.module.css";
-import { useCNC } from "../providers/CNCContext";
+import { useCNC } from "../providers/CNCProvider";
 
 export default function WebcamView() {
     const videoRef = useRef(null);

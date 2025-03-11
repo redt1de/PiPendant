@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./css/StateGroup.module.css";
-import { useCNC } from "../providers/CNCContext";
+import { useCNC } from "../providers/CNCProvider";
 
 export default function StateGroup() {
     const { isConnected, send, consoleMessages, machineState } = useCNC();

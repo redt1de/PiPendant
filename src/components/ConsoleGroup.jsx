@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useContext } from "react";
-import { useCNC } from "../providers/CNCContext";
+import { useCNC } from "../providers/CNCProvider";
 import styles from "./css/ConsoleGroup.module.css";
 
 

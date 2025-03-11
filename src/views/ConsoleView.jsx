@@ -11,7 +11,7 @@ import styles from './css/ConsoleView.module.css';
 import MachineGroup from '../components/MachineGroup';
 import CycleGroup from '../components/CycleGroup';
 import StateGroup from '../components/StateGroup';
-import { useCNC } from "../providers/CNCContext";
+import { useCNC } from "../providers/CNCProvider";
 
 export default function ConsoleView() {
     const { isConnected, send, consoleMessages, machineState } = useCNC();
