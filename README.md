@@ -1,8 +1,8 @@
 # Work in progress
 !! Use at your own risk !!
 
-### TODO
-#### File interaction (controller specific)
+# TODO
+ - [ ] File interaction (controller specific)
     - [ ] FluidNCController handles files,macros vis $Cmds
     - [ ] CNCJsController handles files,macros via gcode:load type commands
     - [ ] any way to upload/load from usb, pi local disk?????
@@ -13,7 +13,8 @@
  - [ ] connect/disconnect still a little funky. initial socket failure, then connect.
 
 
-#### autolevel class
+## autolevel
+### class
 depends on:
  - [X] GrblController.exportHeightMap() -> [{x,y,pz}] 
  - [X] GrblController.clearHeightMap()
@@ -31,30 +32,22 @@ autolevel methods:
  - [ ] Autolevel.generateProbeGridGcode(min, max, gridsize, depth, feed) -> gcode
  - [ ] Autolevel.applyHeightMap(gcode, HeightMap) -> gcode
 
-#### autolevel overlay
-  Usage:
-     - user selects a file in browser and clicks autolevel
-     - a popup overlay shows with some options, displays probe boundaries from autolevel module, has options for grid size, probed depth, feed etc, import or probe option
-     - user clicks start
-     - autolevel module clears probeHistory, send gcode to probe grid, GrblController catches the probe results and updates the probe history
-     - when done, autolevel module generates a HeightMap, and gives option to download or apply
-     - apply will modify the current gcode file with the heightmap
-     - run will execute the adjusted gcode file.
-
-
-
-
-
-
-
+### autolevel overlay/workflow
+1.  user selects a file in browser and clicks autolevel
+2. a popup overlay shows with some options, displays probe boundaries from autolevel module, has options for grid size, probed depth, feed etc, import or probe option
+3. user clicks start
+4. autolevel module clears probeHistory, send gcode to probe grid, GrblController catches the probe results and updates the probe history
+5. when done, autolevel module generates a HeightMap, and gives option to download or apply
+6. apply will modify the current gcode file with the heightmap
+7. run will execute the adjusted gcode file.
 
 
 # refs
-https://github.com/kreso-t/cncjs-kt-ext
-https://github.com/atmelino/cncjs/tree/autolevelwidget
-https://github.com/Crazyglue/grbl-parser
-https://github.com/cncjs/cncjs-pendant-ps3/blob/master/index.js
-https://github.com/cncjs/cncjs/wiki/Controller-API
+[autolevel extension](https://github.com/kreso-t/cncjs-kt-ext)
+[autolevel cncjs fork](https://github.com/atmelino/cncjs/tree/autolevelwidget)
+[grbl parsing code](https://github.com/Crazyglue/grbl-parser)
+[pendant example](https://github.com/cncjs/cncjs-pendant-ps3/blob/master/index.js)
+[cncjs API](https://github.com/cncjs/cncjs/wiki/Controller-API)
 
 
 
