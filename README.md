@@ -1,70 +1,149 @@
-# Getting Started with Create React App
+# Work in progress
+!! Use at your own risk !!
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### TODO
+#### File interaction (controller specific)
+    - [ ] FluidNCController handles files,macros vis $Cmds
+    - [ ] CNCJsController handles files,macros via gcode:load type commands
+    - [ ] any way to upload/load from usb, pi local disk?????
+ 
+ - [ ] figure out tool and spindle updates, spindle speed doesnt update  
+ - [ ] status messages not working right, displaying next to last message
+ - [ ] cycle group buttons, disable as needed process various states
+ - [ ] connect/disconnect still a little funky. initial socket failure, then connect.
 
-## Available Scripts
 
-In the project directory, you can run:
+#### autolevel class
+depends on:
+ - [X] GrblController.exportHeightMap() -> [{x,y,pz}] 
+ - [X] GrblController.clearHeightMap()
+ - [X] GrblController.appendHeightMap({x,y,pz})
 
-### `npm start`
+ autolevel module:
+ - [ ] extracts boundaries from a gcode file
+ - [ ] probes a grid within the boundaries
+ - [ ] generates a heightmap
+ - [ ] heightmap can be downloaded??
+ - [ ] can be applied to current gcode file
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+autolevel methods:
+ - [ ] Autolevel.getBoundaries(gcode) -> {xmin, xmax, ymin, ymax}
+ - [ ] Autolevel.generateProbeGridGcode(min, max, gridsize, depth, feed) -> gcode
+ - [ ] Autolevel.applyHeightMap(gcode, HeightMap) -> gcode
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#### autolevel overlay
+  Usage:
+     - user selects a file in browser and clicks autolevel
+     - a popup overlay shows with some options, displays probe boundaries from autolevel module, has options for grid size, probed depth, feed etc, import or probe option
+     - user clicks start
+     - autolevel module clears probeHistory, send gcode to probe grid, GrblController catches the probe results and updates the probe history
+     - when done, autolevel module generates a HeightMap, and gives option to download or apply
+     - apply will modify the current gcode file with the heightmap
+     - run will execute the adjusted gcode file.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# refs
+https://github.com/kreso-t/cncjs-kt-ext
+https://github.com/atmelino/cncjs/tree/autolevelwidget
+https://github.com/Crazyglue/grbl-parser
+https://github.com/cncjs/cncjs-pendant-ps3/blob/master/index.js
+https://github.com/cncjs/cncjs/wiki/Controller-API
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+# Events CNCJs Emits
+```
+startup	                 {loadedControllers, baudrates, ports}
+config:change	         config
+task:start	             taskId
+task:finish	             (taskId, code)
+task:error	             (taskId, err)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+serialport:list	         ports
+serialport:change	     {port, inuse=true}
+serialport:open	         {port, baudrate, controllerType, inuse=true}
+serialport:close	     {port, inuse=false}
+serialport:error	     {err, port}
+serialport:read	         serial output
+serialport:write	     (data, {...context, source})
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+gcode:load	             (name, gcode, context)
+gcode:unload	         none
 
-### Code Splitting
+feeder:status	         {hold, holdReason, queue, pending, changed}
+sender:status	         {sp, hold, holdReason, name, context, size, total, sent, received, startTime, finishTime, elapsedTime, remaniningTime}
+workflow:state	         workflow.state
+controller:settings	     ('Grbl', {version, parameters, settings)
+controller:state	     'Grbl', {state, parserstate}
+message	
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
+# Events CNCJs Listens
+open	   openPort(port, options, callback)
+close	   closePort(port, callback)
+list	   listPorts(callback)
+command	   command(cmd, port, ...args)
+write	   write(port, data, context)
+writeln	   writeln(port data, context)
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## GrblState from CNCjs
+```json
+{
+    "status": {
+        "activeState": "Alarm",
+        "mpos": {
+            "x": "0.000",
+            "y": "0.000",
+            "z": "0.000"
+        },
+        "wpos": {
+            "x": "-2.000",
+            "y": "-2.000",
+            "z": "2.000"
+        },
+        "ov": [
+            100,
+            100,
+            100
+        ],
+        "subState": 0,
+        "wco": {
+            "x": "2.000",
+            "y": "2.000",
+            "z": "-2.000"
+        },
+        "buf": {
+            "planner": 15,
+            "rx": 128
+        },
+        "feedrate": 0,
+        "spindle": 0
+    },
+    "parserstate": {
+        "modal": {
+            "motion": "G0",
+            "wcs": "G54",
+            "plane": "G17",
+            "units": "G21",
+            "distance": "G90",
+            "feedrate": "G94",
+            "spindle": "M5",
+            "coolant": "M9"
+        },
+        "tool": "0",
+        "feedrate": "0",
+        "spindle": "0"
+    }
+}
+```

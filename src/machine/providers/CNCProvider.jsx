@@ -10,6 +10,8 @@ export function CNCProvider({ options, children }) {
     const [isConnected, setIsConnected] = useState(false);
     const [machineState, setMachineState] = useState({});
     const [consoleMessages, setConsoleMessages] = useState([]);
+    const [probeHistory, setProbeHistory] = useState([]);
+
     const controllerRef = useRef(null);
     const providerRef = useRef(null);
 
@@ -42,10 +44,16 @@ export function CNCProvider({ options, children }) {
             providerRef.current = selectedProvider;
         }
 
-        controllerRef.current.addListener((state, messages) => {
+        controllerRef.current.addListener((state, messages, history) => {
             setMachineState({ ...state });
             setConsoleMessages([...messages]);
+
+            if (history) {
+                setProbeHistory([...history]); // ✅ Update probe history state
+            }
         });
+
+
 
         return () => {
             console.log("🛑 CNCProvider is being unmounted...");
@@ -53,10 +61,34 @@ export function CNCProvider({ options, children }) {
         };
     }, [options]);
 
+    // ✅ Provide probe history methods
+    const appendProbeHistory = (point) => {
+        if (controllerRef.current) {
+            controllerRef.current.appendProbeHistory(point);
+            setProbeHistory([...controllerRef.current.getProbeHistory()]);
+        }
+    };
+
+    const clearProbeHistory = () => {
+        if (controllerRef.current) {
+            controllerRef.current.clearProbeHistory();
+            setProbeHistory([]);
+        }
+    };
+
     if (!providerRef.current) return <div>Loading CNC Provider...</div>;
 
     return (
-        <CNCContext.Provider value={{ isConnected, machineState, consoleMessages, sendRaw: providerRef.current.sendRaw, send: providerRef.current.send }}>
+        <CNCContext.Provider value={{
+            isConnected,
+            machineState,
+            probeHistory,
+            consoleMessages,
+            sendRaw: providerRef.current.sendRaw,
+            send: providerRef.current.send,
+            appendProbeHistory,
+            clearProbeHistory
+        }}>
             {children}
         </CNCContext.Provider>
     );
