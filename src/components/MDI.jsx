@@ -2,9 +2,7 @@ import React, { useContext } from "react"; import styles from './css/MDI.module.
 import { useCNC } from "../machine/providers/CNCProvider";
 
 export default function MDI({ positions = {} }) {
-    const { isConnected, send, consoleMessages, machineState } = useCNC();
-    const grblState = null;
-    // const { grblState } = useContext(CncjsContext);
+    const { machineState } = useCNC();
 
     return (
         <div className={styles.mdiContainer}>

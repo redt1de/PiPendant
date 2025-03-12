@@ -6,7 +6,7 @@ import { CNCProvider } from "./machine/providers/CNCProvider";
 import ControlView from './views/ControlView';
 import ConsoleView from './views/ConsoleView';
 import RunView from './views/RunView';
-import FilesView from './views/FilesView';
+import TestView from './views/TestView';
 import AutolevelView from './views/AutolevelView';
 import DisconnectedOverlay from './util/DisconnectedOverlay';
 import { NavLink } from "react-router-dom"; // ✅ Use NavLink for active styling
@@ -42,8 +42,8 @@ function App() {
             <NavLink to="/run" title="Run" className={({ isActive }) => isActive ? styles.active : ""}>
               Run
             </NavLink>
-            <NavLink to="/files" title="Files" className={({ isActive }) => isActive ? styles.active : ""}>
-              ???
+            <NavLink to="/test" title="test" className={({ isActive }) => isActive ? styles.active : ""}>
+              Test
             </NavLink>
             <NavLink to="/autolevel" title="Autolevel" className={({ isActive }) => isActive ? styles.active : ""}>
               ???
@@ -59,7 +59,7 @@ function App() {
               <Route path="/control" element={<ControlView />} />
               <Route path="/console" element={<ConsoleView />} />
               <Route path="/run" element={<RunView />} />
-              <Route path="/files" element={<FilesView />} />
+              <Route path="/test" element={<TestView />} />
               <Route path="/autolevel" element={<AutolevelView />} />
               <Route path="/webcam" element={<WebcamView />} />
             </Routes>

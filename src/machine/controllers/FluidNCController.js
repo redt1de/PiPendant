@@ -1,4 +1,8 @@
 import GrblController from "./GrblController";
+/*
+FluidNC specific controller
+*/
+
 
 export default class FluidNCController extends GrblController {
     constructor() {
@@ -39,5 +43,11 @@ export default class FluidNCController extends GrblController {
             this.fluidncState.mode = match[1];
             console.log("🛠️ FluidNC Mode:", this.fluidncState.mode);
         }
+    }
+
+    listFiles() {
+        // this.send(`$Files/ListGcode`);
+        this.send(`$Files/ListGcode`);
+        // console.log("📁 Listing files...");
     }
 }

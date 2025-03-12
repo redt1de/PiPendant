@@ -7,8 +7,7 @@ export default function SpindleGroup() {
     const [showKeypad, setShowKeypad] = useState(false);
     const [prompt, setPrompt] = useState('Enter Value');
     const [currentCommand, setCurrentCommand] = useState('');
-    const grblState = null;
-    const { isConnected, send, consoleMessages, machineState } = useCNC();
+    const { controller, machineState } = useCNC();
 
 
     const handleOpenKeypad = (command) => {
@@ -46,17 +45,17 @@ export default function SpindleGroup() {
             case 'm3':
                 // e.g., "M3 S{value}"
                 console.log(`Send command: M3 S${value}`);
-                send(`M3 S${value}`);
+                controller.send(`M3 S${value}`);
                 break;
             case 'm4':
                 // e.g., "M4 S{value}"
                 console.log(`Send command: M4 S${value}`);
-                send(`M4 S${value}`);
+                controller.send(`M4 S${value}`);
                 break;
             case 'm6':
                 // e.g., "M6 T{value}"
                 console.log(`Send command: M6 T${value}`);
-                send(`M6 T${value}`);
+                controller.send(`M6 T${value}`);
                 break;
             default:
                 console.log('Unknown command');
@@ -68,7 +67,7 @@ export default function SpindleGroup() {
     // Example simple M5 logic (stop spindle) - no keypad
     const handleM5 = () => {
         console.log('Send command: M5 (stop spindle)');
-        send(`M5`);
+        controller.send(`M5`);
     };
 
     return (

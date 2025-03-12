@@ -10,6 +10,9 @@ const excludedPatterns = [
 export default class GrblController extends EventEmitter {
     constructor() {
         super();
+        this.send = () => console.error("❌ send() is not initialized");
+        this.sendRaw = () => console.error("❌ sendRaw() is not initialized");
+        this.probeHistory = []; // ✅ Store probe history
         this.machineState = {
             state: "Unknown",
             mpos: { x: 0.000, y: 0.000, z: 0.000 },
@@ -48,6 +51,39 @@ export default class GrblController extends EventEmitter {
         });
     }
 
+    listFiles() {
+        console.log("listFiles is not defined in the current controller.");
+    }
+
+    /**
+     * Appends a probe point to the probe history
+     */
+    appendProbeHistory({ x, y, pz }) {
+        this.probeHistory.push({ x, y, pz });
+        this.notifyListeners();
+    }
+
+    /**
+     * Clears the probe history
+     */
+    clearProbeHistory() {
+        this.probeHistory = [];
+        this.notifyListeners();
+    }
+
+    /**
+     * Returns the full probe history
+     */
+    getProbeHistory() {
+        return [...this.probeHistory];
+    }
+
+
+    setSendFunctions(send, sendRaw) {
+        this.send = send;
+        this.sendRaw = sendRaw;
+    }
+
     addListener(callback) {
         if (typeof callback !== "function") {
             throw new TypeError("Listener must be a function");
@@ -68,6 +104,7 @@ export default class GrblController extends EventEmitter {
         if (this.consoleMessages.length > 200) {  // ✅ Keep console buffer limited
             this.consoleMessages.shift();
         }
+        this.notifyListeners();
     }
 
     parseData(line) {
@@ -81,7 +118,10 @@ export default class GrblController extends EventEmitter {
             this.updateWorkPosition();
             this.emit("machineState", this.machineState);
         } else if (line.startsWith("[")) {
-            if (line.startsWith("[GC:")) {
+            if (line.startsWith("[PRB:")) {
+                this.parseProbeResult(line); // ✅ Parse probe result
+                this.emit("probe", this.probeHistory);
+            } else if(line.startsWith("[GC:")) {
                 const modalUpdate = this.parseModal(line);
                 Object.assign(this.machineState.modal, modalUpdate);
                 this.machineState.activeCS = modalUpdate.coordinateSystem || "G54"; // ✅ Store active coordinate system
@@ -205,4 +245,33 @@ export default class GrblController extends EventEmitter {
 
         return modalUpdate;
     }
+
+        /**
+     * Parses Grbl probe result
+     * Example format: `[PRB: -10.000,5.000,-2.500:1]`
+     */
+        parseProbeResult(line) {
+            const match = line.match(/\[PRB:\s*(-?\d+\.\d+),\s*(-?\d+\.\d+),\s*(-?\d+\.\d+):(\d)\]/);
+            if (match) {
+                const x = parseFloat(match[1]).toFixed(3);
+                const y = parseFloat(match[2]).toFixed(3);
+                const pz = parseFloat(match[3]).toFixed(3);
+                const success = match[4] === "1";
+    
+                if (success) {
+                    this.appendProbeHistory({ x, y, pz });
+                }
+            }
+        }
 }
+
+/*
+let prbm = /\[PRB:([\+\-\.\d]+),([\+\-\.\d]+),([\+\-\.\d]+),?([\+\-\.\d]+)?:(\d)\]/g.exec(data)
+    96	        if (prbm) {
+    97	          let prb = [parseFloat(prbm[1]), parseFloat(prbm[2]), parseFloat(prbm[3])]
+    98	          let pt = {
+    99	            x: prb[0] - this.wco.x,
+   100	            y: prb[1] - this.wco.y,
+   101	            z: prb[2] - this.wco.z
+   102	          }
+*/

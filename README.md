@@ -43,11 +43,13 @@ autolevel methods:
 
 
 # refs
-[autolevel extension](https://github.com/kreso-t/cncjs-kt-ext)
-[autolevel cncjs fork](https://github.com/atmelino/cncjs/tree/autolevelwidget)
-[grbl parsing code](https://github.com/Crazyglue/grbl-parser)
-[pendant example](https://github.com/cncjs/cncjs-pendant-ps3/blob/master/index.js)
-[cncjs API](https://github.com/cncjs/cncjs/wiki/Controller-API)
+[autolevel extension](https://github.com/kreso-t/cncjs-kt-ext)  
+[autolevel cncjs fork](https://github.com/atmelino/cncjs/tree/autolevelwidget)  
+[grbl parsing code](https://github.com/Crazyglue/grbl-parser)  
+[pendant example](https://github.com/cncjs/cncjs-pendant-ps3/blob/master/index.js)  
+[cncjs API](https://github.com/cncjs/cncjs/wiki/Controller-API)  
+
+
 
 
 

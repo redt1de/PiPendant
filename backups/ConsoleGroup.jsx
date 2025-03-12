@@ -17,7 +17,7 @@ const syntaxMatchers = {
 
 export default function ConsoleGroup() {
 
-    const { consoleMessages } = useCNC();
+    const { isConnected, consoleMessages, connect, disconnect, send, machineState, controller } = useCNC();
 
     const scrollRef = useRef(null);
 

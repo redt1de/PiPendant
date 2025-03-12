@@ -5,11 +5,11 @@ import { useContext } from 'react';
 import { useCNC } from "../machine/providers/CNCProvider";
 
 export default function CycleGroup() {
-    const { isConnected, consoleMessages, connect, disconnect, send, machineState } = useCNC();
+    const { controller } = useCNC();
     return (
 
         <div className={styles.cycleContainer}>
-            <button onClick={() => send(`?\n$G\n$#`)}><FontAwesomeIcon icon={faPlay} /></button>
+            <button onClick={() => controller.send(`?\n$G\n$#`)}><FontAwesomeIcon icon={faPlay} /></button>
             <button><FontAwesomeIcon icon={faPause} /></button>
             <button><FontAwesomeIcon icon={faStop} /></button>
         </div>

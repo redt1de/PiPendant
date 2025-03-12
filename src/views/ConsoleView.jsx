@@ -14,19 +14,7 @@ import StateGroup from '../components/StateGroup';
 import { useCNC } from "../machine/providers/CNCProvider";
 
 export default function ConsoleView() {
-    const { isConnected, send, consoleMessages, machineState } = useCNC();
-    const [machineMessages, setMachineMessages] = useState([
-        'Initializing...',
-        'Waiting for data...'
-    ]);
-
-    useEffect(() => {
-        // Example: mock new messages arriving every 2 seconds
-        const interval = setInterval(() => {
-            setMachineMessages(prev => [...prev, `New message at ${Date.now()}`]);
-        }, 2000);
-        return () => clearInterval(interval);
-    }, []);
+    const { controller } = useCNC();
 
 
     return (
@@ -39,9 +27,9 @@ export default function ConsoleView() {
             </div>
 
             <div style={{ position: 'absolute', bottom: '0px', left: '10px' }}>
-                <GPadGroup messages={machineMessages} onEnter={(input) => {
+                <GPadGroup onEnter={(input) => {
                     console.log('🚀 Sending Gcode:', input);
-                    send(input);
+                    controller.send(input);
 
                 }} />
             </div>
@@ -63,7 +51,7 @@ export default function ConsoleView() {
 
             <div style={{ position: 'absolute', bottom: '0px', right: '10px' }}>
                 <Frame title="Console">
-                    <ConsoleGroup messages={machineMessages} />
+                    <ConsoleGroup />
                 </Frame>
             </div>
         </div>

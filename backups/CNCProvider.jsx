@@ -10,6 +10,7 @@ export function CNCProvider({ options, children }) {
     const [isConnected, setIsConnected] = useState(false);
     const [machineState, setMachineState] = useState({});
     const [consoleMessages, setConsoleMessages] = useState([]);
+    const [probeHistory, setProbeHistory] = useState([]);
 
     const controllerRef = useRef(null);
     const providerRef = useRef(null);
@@ -47,6 +48,9 @@ export function CNCProvider({ options, children }) {
             setMachineState({ ...state });
             setConsoleMessages([...messages]);
 
+            if (history) {
+                setProbeHistory([...history]); // ✅ Update probe history state
+            }
 
             controllerRef.current.setSendFunctions(providerRef.current.send, providerRef.current.sendRaw);
         });
@@ -67,6 +71,7 @@ export function CNCProvider({ options, children }) {
             controller: controllerRef.current,
             isConnected,
             machineState,
+            probeHistory,
             consoleMessages,
             sendRaw: providerRef.current.sendRaw,
             send: providerRef.current.send,
